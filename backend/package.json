@@ -1,0 +1,35 @@
+{
+  "name": "one-work-space-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Natural-language requests -> validated, permission-gated tool-call plans executed against Gmail/Calendar.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "migrate": "node src/db/migrate.js",
+    "seed": "node src/db/seed.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src tests"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.65.0",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "google-auth-library": "^10.4.0",
+    "googleapis": "^161.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "node-cron": "^4.2.1",
+    "pg": "^8.16.3",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.0",
+    "supertest": "^7.1.4",
+    "vitest": "^3.2.4"
+  }
+}

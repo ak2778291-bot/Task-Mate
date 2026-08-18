@@ -1,0 +1,28 @@
+node_modules/
+dist/
+.env
+.env.local
+*.log
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+
+# Personal notes
+concepts to learn.md
+
+# Dependencies
+node_modules/
+.venv/
+venv/
+__pycache__/
+
+# Build / generated files
+dist/
+build/
+*.log
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/

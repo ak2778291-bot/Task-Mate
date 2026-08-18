@@ -1,0 +1,263 @@
+/*
+  Visual direction: a dispatch manifest.
+  The product's whole claim is "you see the plan before anything happens", so the UI is built
+  as a sheet you countersign — ruled rows, an ordinal gutter, and a status stamp per line.
+  Palette is cool paper and ink with three functional signal colours only: amber = your
+  signature is required, teal = it happened, red = the system refused. Nothing is decorative.
+*/
+
+:root {
+  --paper: #e9edf2;
+  --sheet: #fbfcfd;
+  --ink: #101922;
+  --slate: #5b6b80;
+  --rule: #ccd5e0;
+  --hold: #8a6300; /* awaiting confirmation */
+  --done: #0d6b5b; /* executed */
+  --stop: #a8291f; /* blocked / failed */
+
+  --display: 'IBM Plex Sans Condensed', ui-sans-serif, system-ui, sans-serif;
+  --body: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+
+  --gutter: 3.25rem;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  /* faint ruling, like the grain of a printed form */
+  background-image: repeating-linear-gradient(
+    180deg, transparent 0 31px, rgba(16, 25, 34, 0.035) 31px 32px
+  );
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, textarea { font: inherit; color: inherit; }
+
+.shell { max-width: 62rem; margin: 0 auto; padding: 2rem 1.25rem 5rem; }
+
+/* ---------- masthead ---------- */
+.masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--ink);
+}
+.wordmark {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 4vw, 2.3rem);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.wordmark span { color: var(--slate); }
+.masthead-meta {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--slate);
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.thesis {
+  font-family: var(--display);
+  font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+  font-weight: 500;
+  line-height: 1.4;
+  max-width: 46rem;
+  margin: 1.25rem 0 2rem;
+  color: var(--ink);
+}
+.thesis em { font-style: normal; box-shadow: inset 0 -0.45em 0 rgba(138, 99, 0, 0.22); }
+
+/* ---------- generic sheet ---------- */
+.sheet {
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  box-shadow: 0 1px 0 rgba(16, 25, 34, 0.06);
+  margin-bottom: 1.5rem;
+}
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--slate);
+}
+.sheet-body { padding: 1rem; }
+
+/* ---------- request box ---------- */
+.composer textarea {
+  width: 100%;
+  min-height: 5.5rem;
+  resize: vertical;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 0.75rem 0.85rem;
+  background: #fff;
+  font-family: var(--body);
+}
+.composer textarea:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.composer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+.hint { font-size: 0.82rem; color: var(--slate); }
+
+.examples { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.6rem; }
+.examples button {
+  border: 1px dashed var(--rule);
+  background: transparent;
+  color: var(--slate);
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.examples button:hover { border-color: var(--slate); color: var(--ink); }
+
+/* ---------- buttons ---------- */
+.btn {
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: #fff;
+  padding: 0.5rem 1.1rem;
+  border-radius: 2px;
+  cursor: pointer;
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.btn:hover:not(:disabled) { background: #0a1119; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover:not(:disabled) { background: rgba(16, 25, 34, 0.06); }
+.btn.hold { background: var(--hold); border-color: var(--hold); }
+.btn:focus-visible { outline: 2px solid var(--hold); outline-offset: 2px; }
+
+/* ---------- the manifest: signature element ---------- */
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--gutter) 1fr;
+  border-top: 1px solid var(--rule);
+}
+.step:first-child { border-top: 0; }
+.step-ordinal {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--slate);
+  padding: 0.85rem 0 0.85rem 1rem;
+  border-right: 1px solid var(--rule);
+}
+.step-main { padding: 0.85rem 1rem; min-width: 0; }
+.step-call {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 500;
+  word-break: break-word;
+}
+.step-call .dot { color: var(--slate); }
+.step-args {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--slate);
+  margin: 0.4rem 0 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.step-note { font-size: 0.8rem; color: var(--stop); margin-top: 0.4rem; }
+.step-ref { font-family: var(--mono); font-size: 0.72rem; color: var(--done); margin-top: 0.4rem; }
+
+/* the amber hatch marks the steps that cannot run without a human */
+.step.irreversible .step-ordinal {
+  background: repeating-linear-gradient(
+    -45deg, rgba(138, 99, 0, 0.13) 0 6px, transparent 6px 12px
+  );
+}
+
+.stamp {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1.5px solid currentColor;
+  border-radius: 2px;
+  padding: 0.05rem 0.4rem;
+  white-space: nowrap;
+}
+.stamp.hold { color: var(--hold); }
+.stamp.done { color: var(--done); }
+.stamp.stop { color: var(--stop); }
+.stamp.idle { color: var(--slate); }
+
+.step-status { float: right; margin-left: 0.75rem; }
+
+/* blocked steps get the refusal printed across them */
+.step.blocked .step-call { text-decoration: line-through; text-decoration-color: rgba(168, 41, 31, 0.5); }
+
+.actions { display: flex; gap: 0.6rem; padding: 0.85rem 1rem; border-top: 1px solid var(--rule); flex-wrap: wrap; align-items: center; }
+
+/* ---------- history ---------- */
+.record { border-top: 1px solid var(--rule); }
+.record:first-child { border-top: 0; }
+.record-head {
+  width: 100%;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: 0;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  text-align: left;
+}
+.record-head:hover { background: rgba(16, 25, 34, 0.03); }
+.record-request { font-weight: 500; }
+.record-time { font-family: var(--mono); font-size: 0.72rem; color: var(--slate); }
+
+/* ---------- auth ---------- */
+.auth { max-width: 24rem; }
+.auth label { display: block; font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--slate); margin-bottom: 0.25rem; }
+.auth input { width: 100%; padding: 0.5rem 0.6rem; border: 1px solid var(--rule); border-radius: 2px; background: #fff; margin-bottom: 0.8rem; }
+.auth input:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+
+.notice { padding: 0.6rem 0.8rem; border-left: 3px solid var(--stop); background: rgba(168, 41, 31, 0.06); font-size: 0.88rem; margin-bottom: 1rem; }
+.empty { padding: 1.5rem 1rem; color: var(--slate); font-size: 0.9rem; }
+
+.step, .record { animation: settle 0.28s ease-out both; }
+@keyframes settle { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+@media (max-width: 520px) {
+  :root { --gutter: 2.4rem; }
+  .step-ordinal { padding-left: 0.6rem; }
+  .step-main { padding: 0.75rem 0.7rem; }
+}

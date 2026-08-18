@@ -1,0 +1,51 @@
+# Render blueprint: managed Postgres + the backend as a Docker service.
+# Create it from the Render dashboard with "New → Blueprint" pointed at this repo.
+#
+# Migrations are not a separate step: src/index.js runs migrate() before it serves traffic,
+# so a deploy applies schema.sql idempotently (every statement is CREATE ... IF NOT EXISTS
+# or an ON CONFLICT insert).
+
+databases:
+  - name: ows-postgres
+    databaseName: ows
+    user: ows
+    plan: free
+
+services:
+  - type: web
+    name: ows-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ows-postgres
+          property: connectionString
+      # generateValue creates a random secret Render keeps; never commit these.
+      - key: JWT_SECRET
+        generateValue: true
+      # Must be 32 bytes of hex. Render's generateValue is not hex-shaped, so set this
+      # manually in the dashboard: openssl rand -hex 32
+      - key: TOKEN_ENCRYPTION_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      # Must exactly match the redirect URI registered in Google Cloud Console.
+      - key: GOOGLE_REDIRECT_URI
+        sync: false
+      # Your Vercel URL. Wrong value here = CORS failures that look like a broken frontend.
+      - key: CORS_ORIGIN
+        sync: false
+      - key: MOCK_GOOGLE
+        value: '0'
+      - key: SCHEDULER_ENABLED
+        value: '1'
+      - key: LOG_LEVEL
+        value: info
