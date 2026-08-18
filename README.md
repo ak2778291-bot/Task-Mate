@@ -1,4 +1,4 @@
-# One Work Space
+# Task Mate
 
 A natural-language request — *"remind me to follow up with Ana on Friday"*, *"email Ana about the handover"* — becomes a validated, permissioned plan of tool calls executed against real Gmail and Google Calendar APIs, with every step persisted and resumable.
 
